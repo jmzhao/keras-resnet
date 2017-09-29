@@ -25,6 +25,8 @@ class ResNet(keras.models.Model):
     :param inputs: input tensor (e.g. an instance of `keras.layers.Input`)
 
     :param blocks: list of blocks to use
+    
+    :param init_features: number of features used in the intial block
 
     :param include_top: if true, includes classification layers
 
@@ -49,7 +51,7 @@ class ResNet(keras.models.Model):
 
     """
 
-    def __init__(self, inputs, blocks, block, include_top=True, classes=1000):
+    def __init__(self, inputs, blocks, block, init_features=64, include_top=True, classes=1000):
         if keras.backend.image_data_format() == "channels_last":
             axis = 3
         else:
@@ -60,7 +62,7 @@ class ResNet(keras.models.Model):
         x = keras.layers.Activation("relu", name="conv1_relu")(x)
         x = keras.layers.MaxPooling2D((3, 3), strides=(2, 2), padding="same", name="pool1")(x)
 
-        features = 64
+        features = init_features
 
         for stage_id, iterations in enumerate(blocks):
             for block_id in range(iterations):
